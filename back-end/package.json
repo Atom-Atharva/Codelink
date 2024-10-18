@@ -1,0 +1,21 @@
+{
+    "name": "codelink-backend",
+    "version": "1.0.0",
+    "description": "Backend for Codelink Project",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node src/app.js",
+        "dev": "nodemon src/app.js"
+    },
+    "keywords": [
+        "nodejs",
+        "javascript",
+        "backend"
+    ],
+    "author": "Atharva Sugandhi",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.21.1"
+    }
+}
