@@ -151,3 +151,83 @@ app.use("/test", (req, res) => {
 ```
 
 Here, `app.use` will address all the response handler with `/test`, but `app.get` will address only HTTP Method `GET` for the `/user`.
+
+---
+
+# Episode 5: Middlewares & Error handlers
+
+In this Episode we will learn about:
+
+1. Middlewares
+2. Error Handler
+
+## Middlewares
+
+Middleware is a request handler that allows you to intercept and manipulate requests and responses before they reach route handlers. They are the functions that are invoked by the Express.js routing layer.
+
+An `app.use or app.get` can have multiple handlers.
+
+```js
+// Request Handler to get User Info
+app.get(
+    "/user",
+    (req, res, next) => {
+        console.log("First Handler");
+        // This will call the next handler here.
+        next();
+    },
+    (req, res) => {
+        console.log("Second Handler");
+        res.send("Second Handler");
+    }
+);
+```
+
+Using `next()` method we can move onto next handler and execute its operations. So, All the in between handlers will work as Middlewares.
+
+If `next()` is not present at any Middleware, the app will hang there till request has been timed out.
+
+`NOTE`: Once a response had been send to the client, another response cannot be send again on same request.
+
+### Use of Middlewares
+
+-   Pre-execute some operations and checks.
+-   Used for Pre-processing of data before final procedure (Route Handler).
+
+### Flow of Request
+
+`GET /user` - It checks all the app.xxx("matching route") function till it sends back response otherwise it will hang to infinity.
+
+```
+GET /user => Middleware Chain => Request Handler
+```
+
+## Error Handling
+
+What if there is some error occurred in request handler? We need to handle it with:
+
+1. **Try-Catch Block**
+
+```js
+// Request Handler to store User Info
+app.post("/user", (req, res) => {
+    try {
+        res.send("Updated User Info!");
+    } catch (error) {
+        res.status(500).send("Something Went Wrong!");
+    }
+});
+```
+
+2. **Error Handlers**
+
+```js
+// Error Handler, It need to be at bottom (Order Matters)
+app.use("/", (err, req, res, next) => {
+    if (err) {
+        res.status(500).send("Something Went Wrong!");
+    }
+});
+```
+
+---
