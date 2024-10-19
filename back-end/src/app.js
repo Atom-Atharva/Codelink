@@ -1,46 +1,42 @@
 import express from "express";
+import connectDB from "./config/database.js";
+import dotenv from "dotenv";
+import { User } from "./models/user.model.js";
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT;
 
-// Request Handler to get User Info
-app.get(
-    "/user",
-    // This function will work as Middlewares
-    (req, res, next) => {
-        console.log("First Handler");
-        next();
-    },
-    (req, res) => {
-        console.log("Second Handler");
-        res.send("Second Handler");
-    }
-);
+app.post("/signup", async (req, res) => {
+    const obj = {
+        firstName: "Atharva",
+        lastName: "Sugandhi",
+        emailId: "admin@email.com",
+        password: "Atom118",
+    };
 
-// Error Handler, It need to be at bottom (Order Matters)
-app.use("/", (err, req, res, next) => {
-    if (err) {
-        res.status(500).send("Something Went Wrong!");
-    } 
-});
-// Request Handler to store User Info
-app.post("/user", (req, res) => {
-    throw new Error("Something Went Wrong!");
-    // res.send("Working...");
-});
+    // Creating a new Instance of User Model
+    const user = new User(obj);
 
-// Request Handler for /test
-app.use("/test", (req, res) => {
-    res.send("Testing 1, 2, 3...");
-});
+    try {
+        // Save User Instance to Database
+        await user.save();
 
-// Error Handler, It need to be at bottom (Order Matters)
-app.use("/", (err, req, res, next) => {
-    if (err) {
-        res.status(500).send("Root Something Went Wrong!");
+        // Send Response back to client.
+        res.status(200).send("User Added Successfully!");
+    } catch (err) {
+        res.status(400).send("Error saving the user:" + err);
     }
 });
 
-// Server Listening on Port
-app.listen(7777, () => {
-    console.log("Listening on PORT 7777...");
-});
+connectDB()
+    .then(() => {
+        console.log("Connected to DB!");
+        // Server Listening on Port
+        app.listen(PORT || 8080, () => {
+            console.log(`Listening on PORT: ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+    });

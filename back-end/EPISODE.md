@@ -231,3 +231,91 @@ app.use("/", (err, req, res, next) => {
 ```
 
 ---
+
+# Episode 6: Database, Schema & Models
+
+In this Episode:
+
+1. Schema, Models.
+2. Store Data in DB.
+
+```
+Note:
+Database connection should be made before Backend Connection because we don't want user to make API calls before connecting to Database.
+
+Thus, Server should be listen only when DB Connection is made.
+```
+
+## Schema and Model
+
+Defines the structure for the database collection and Model is used to as Class for the Schema and use it to make instances of the model.
+
+```js
+import mongoose from "mongoose";
+
+// Creating Schema for the User Model
+const userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+    },
+    lastName: {
+        type: String,
+    },
+    emailId: {
+        type: String,
+    },
+    password: {
+        type: String,
+    },
+});
+
+// Creating Model from User Schema
+export const User = mongoose.model("User", userSchema);
+```
+
+## Storing of Data
+
+```js
+app.post("/signup", async (req, res) => {
+    const obj = {
+        firstName: "Atharva",
+        lastName: "Sugandhi",
+        emailId: "admin@email.com",
+        password: "Atom118",
+    };
+
+    // Creating a new Instance of User Model
+    const user = new User(obj);
+
+    // Always Do Error Handling for Async Operations.
+    try {
+        // Save User Instance to Database
+        await user.save();
+
+        // Send Response back to client.
+        res.status(200).send("User Added Successfully!");
+    } catch (err) {
+        res.status(400).send("Error saving the user:" + err);
+    }
+});
+```
+
+Inside MongoDB, data will be stored as:
+
+```json
+{
+    "_id": {
+        "$oid": "6713ce8fe8de13491f6daac1"
+    },
+    "firstName": "Atharva",
+    "lastName": "Sugandhi",
+    "emailId": "admin@email.com",
+    "password": "Atom118",
+    "__v": 0
+}
+```
+
+Here, `_id` and `__v` are created by mongoDB itself.
+
+-   `_id`: Unique ID or ObjectID to uniquely identify an instance.
+-   `__v`: It tells the version of the document, how many time it has been updated, etc.
