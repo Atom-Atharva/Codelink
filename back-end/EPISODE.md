@@ -319,3 +319,43 @@ Here, `_id` and `__v` are created by mongoDB itself.
 
 -   `_id`: Unique ID or ObjectID to uniquely identify an instance.
 -   `__v`: It tells the version of the document, how many time it has been updated, etc.
+
+---
+
+# Episode 7: Diving into APIs
+
+In this Episode:
+
+1. JS Object VS JSON (Difference)
+2. APIs (Application Programming Interface)
+
+## JS Object VS JSON
+
+| JS Object                               | JSON (JavaScript Object Notation)          |
+| :-------------------------------------- | :----------------------------------------- |
+| Key names do not require double quotes. | Key names must be in double quotes.        |
+| Can contain functions as values.        | Cannot contain functions as values.        |
+| Used within JavaScript code.            | Used for data interchange between systems. |
+| No strict syntax rules.                 | Strict syntax rules.                       |
+| Example: `{ name: "Atom" }`             | Example: `{ "name": "Atom" }`              |
+
+## API
+
+Stands for `Application Programming Interface` and is used for fetching and storing information between systems.
+
+While storing the data, data is send from the client to server in the form of JSON, which can be accessed from `req.body` but the JSON need to be parse and converted to JS Object with the help of middleware: `app.use(express.json())`
+
+In Our Project, I have created following APIs:
+
+-   `GET` : To fetch some data.
+-   `POST` : To store some data.
+-   `DELETE` : To delete some data.
+-   `PATCH` : To Update some data without modifying whole resource.
+-   `PUT` : To Modify resource data entirely.
+
+```
+NOTE:
+When Stuck Read Docs. Here, we have referred Mongoose Documentations.
+```
+
+---
