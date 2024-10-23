@@ -2,8 +2,8 @@
 
 In this episode:
 
--   Initialize Backend (npm init)
--   Create Express Server
+-   [Initialize Backend (npm init)](#initialize-project)
+-   [Create Express Server](#express-server)
 
 ## Initialize Project
 
@@ -53,8 +53,8 @@ We would see:
 
 In this Episode:
 
-1. Routing
-2. Request Handlers
+1. [Routing](#routing)
+2. [Request Handlers](#request-handlers)
 
 ## Routing
 
@@ -158,8 +158,8 @@ Here, `app.use` will address all the response handler with `/test`, but `app.get
 
 In this Episode we will learn about:
 
-1. Middlewares
-2. Error Handler
+1. [Middlewares](#middlewares)
+2. [Error Handler](#error-handling)
 
 ## Middlewares
 
@@ -236,8 +236,8 @@ app.use("/", (err, req, res, next) => {
 
 In this Episode:
 
-1. Schema, Models.
-2. Store Data in DB.
+1. [Schema, Models.](#schema-and-model)
+2. [Store Data in DB.](#storing-of-data)
 
 ```
 Note:
@@ -326,8 +326,8 @@ Here, `_id` and `__v` are created by mongoDB itself.
 
 In this Episode:
 
-1. JS Object VS JSON (Difference)
-2. APIs (Application Programming Interface)
+1. [JS Object VS JSON (Difference)](#js-object-vs-json)
+2. [APIs (Application Programming Interface)](#api)
 
 ## JS Object VS JSON
 
@@ -357,5 +357,172 @@ In Our Project, I have created following APIs:
 NOTE:
 When Stuck Read Docs. Here, we have referred Mongoose Documentations.
 ```
+
+---
+
+# Episode 8: Data Sanitization and Schema Validation
+
+In this episode:
+
+1. [Data Sanitization](#data-sanitization)
+2. [Schema Validation](#schema-validation)
+3. [NPM Express-Validator](#npm-express-validator)
+
+## Data Sanitization
+
+Data sanitization is the process of cleaning data to ensure it is safe to use. This involves removing or modifying data that is incorrect, incomplete, improperly formatted, or potentially harmful.
+
+It is same as API level Validation.
+
+### Why Data Sanitization?
+
+-   Prevents injection attacks.
+-   Ensures data integrity.
+-   Improves data quality.
+
+```js
+// Update User - PATCH /user - Update User Information in DB.
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    const data = req.body;
+
+    try {
+        // API Level Validation : Data Sanitization
+        const ALLOWED_UPDATES = [
+            "photoUrl",
+            "age",
+            "skills",
+            "gender",
+            "about",
+        ];
+
+        // Check if Updates are allowed or not.
+        const isUpdateAllowed = Object.keys(data).every((k) =>
+            ALLOWED_UPDATES.includes(k)
+        );
+        if (!isUpdateAllowed) {
+            throw new Error("Update Not Allowed!");
+        }
+        if (data?.skills.length > 10) {
+            throw new Error("Skills cannot be more than 10.");
+        }
+
+        // Any other data, which is not in Schema will get ignored. Ex: userId.
+        await User.findByIdAndUpdate(userId, data, {
+            // Explicitly Allow Validator to run on this request.
+            runValidators: true,
+        });
+        res.status(200).send("User Updated Successfully!");
+    } catch (error) {
+        res.status(400).send("Update Failed: ", error);
+    }
+});
+```
+
+## Schema Validation
+
+Schema validation ensures that the data being stored in the database adheres to a defined structure. This is crucial for maintaining data integrity and consistency.
+
+### Implementing Schema Validation
+
+In MongoDB with Mongoose, you can define validation rules directly in your schema.
+
+#### Example:
+
+```js
+import mongoose from "mongoose";
+
+// Creating Schema for the User Model
+const userSchema = new mongoose.Schema(
+    {
+        firstName: {
+            type: String,
+            required: true,
+            minLength: 3,
+            maxLength: 20,
+        },
+        lastName: {
+            type: String,
+        },
+        emailId: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        age: {
+            type: Number,
+            min: 18,
+        },
+        gender: {
+            type: String,
+            // Validate Function for Custom Check (By default on new entries only)
+            // To work on other requests, allow explicitly.
+            validate(value) {
+                if (!["male", "female", "others"].includes(value)) {
+                    throw new Error("Gender data is not valid");
+                }
+            },
+        },
+        photoUrl: {
+            type: String,
+            default:
+                "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png",
+        },
+        about: {
+            type: String,
+            default: "This is the default about of the user!",
+        },
+        skills: {
+            type: [String],
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
+// Creating Model from User Schema
+export const User = mongoose.model("User", userSchema);
+```
+
+In this schema, `emailId` must be unique and mandatory, while `gender` contains a custom validator which needs to be called explicitly for request which are not creating new entries.
+
+```js
+// Any other data, which is not in Schema will get ignored. Ex: userId.
+await User.findByIdAndUpdate(userId, data, {
+    // Explicitly Allow Validator to run on this request.
+    runValidators: true,
+});
+```
+
+By combining data sanitization and schema validation, you can ensure that your application handles data securely and consistently.
+
+## NPM Express-Validator
+
+It is an external library for validation: `npm i validator`, create your custom validators for API Level or Schema Level Protection.
+
+```js
+// Schema Level Validation
+emailId: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error("Invalid Email Address: ", value);
+                }
+            },
+        },
+```
+
+`NOTE:` Never Trust `req.body`, Always keep **validations**.
 
 ---

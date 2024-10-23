@@ -67,16 +67,39 @@ app.delete("/user", async (req, res) => {
 });
 
 // Update User - PATCH /user - Update User Information in DB.
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params.userId;
     const data = req.body;
 
     try {
+        // API Level Validation : Data Sanitization
+        const ALLOWED_UPDATES = [
+            "photoUrl",
+            "age",
+            "skills",
+            "gender",
+            "about",
+        ];
+
+        // Check if Updates are allowed or not.
+        const isUpdateAllowed = Object.keys(data).every((k) =>
+            ALLOWED_UPDATES.includes(k)
+        );
+        if (!isUpdateAllowed) {
+            throw new Error("Update Not Allowed!");
+        }
+        if (data?.skills.length > 10) {
+            throw new Error("Skills cannot be more than 10.");
+        }
+
         // Any other data, which is not in Schema will get ignored. Ex: userId.
-        await User.findByIdAndUpdate(userId, data);
+        await User.findByIdAndUpdate(userId, data, {
+            // Explicitly Allow Validator to run on this request.
+            runValidators: true,
+        });
         res.status(200).send("User Updated Successfully!");
     } catch (error) {
-        res.status(400).send("Something Went Wrong.");
+        res.status(400).send("Update Failed: ", error);
     }
 });
 
