@@ -2,6 +2,8 @@ import express from "express";
 import connectDB from "./config/database.js";
 import dotenv from "dotenv";
 import { User } from "./models/user.model.js";
+import { validateLoginData, validateSignUpData } from "./utils/validation.js";
+import bcrypt from "bcrypt";
 dotenv.config();
 
 const app = express();
@@ -12,10 +14,22 @@ app.use(express.json());
 
 // Signup API - POST /signup - Register User to DB
 app.post("/signup", async (req, res) => {
-    // Creating a new Instance of User Model
-    const user = new User(req.body);
-
     try {
+        // Validation of Data
+        validateSignUpData(req);
+
+        // Encrypt the password
+        const { firstName, lastName, emailId, password } = req.body;
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        // Creating a new Instance of User Model
+        const user = new User({
+            firstName,
+            lastName,
+            emailId,
+            password: passwordHash,
+        });
+
         // Save User Instance to Database
         await user.save();
 
@@ -23,6 +37,30 @@ app.post("/signup", async (req, res) => {
         res.status(200).send("User Added Successfully!");
     } catch (err) {
         res.status(400).send("Error saving the user:" + err);
+    }
+});
+
+app.post("/login", async (req, res) => {
+    try {
+        // Validate of Data
+        validateLoginData(req);
+
+        // Find User
+        const { emailId, password } = req.body;
+        const user = await User.findOne({ emailId: emailId });
+        if (!user) {
+            throw new Error("Invalid Credentials!");
+        }
+
+        // Hash and Compare Password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+            res.status(200).send("User Logged In Successfully.");
+        } else {
+            res.status(400).send("Invalid Credentials!");
+        }
+    } catch (error) {
+        res.status(400).send("Login Failed: " + error.message);
     }
 });
 

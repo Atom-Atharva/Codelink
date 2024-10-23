@@ -526,3 +526,19 @@ emailId: {
 `NOTE:` Never Trust `req.body`, Always keep **validations**.
 
 ---
+
+# Episode 9: Encrypting Passwords
+
+In this Episode:
+
+1. [Encryption](#encryption)
+
+## Encryption
+
+Password in DB should be hidden from everyone, thus we need to encrypt password for user integrity and security. We will be using `bcrypt` library for hashing the passwords.
+
+Created `/signup` and `/login` routes inside application with `brcyption` on passwords.
+
+`NOTE:` DO NOT Provide Extra Information in Errors (Information Leaking). For example: Do not throw error message like "User Not Registered in DB" or "Password Incorrect", instead use "Invalid Credentials".
+
+---
