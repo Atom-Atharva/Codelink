@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // Creating Schema for the User Model
 const userSchema = new mongoose.Schema(
@@ -73,6 +75,37 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+
+// Schema Methods
+// Don't use Arrow Methods because "this" keyword works with normal functions and doesn't work with arrow functions.
+userSchema.methods.getJWT = async function () {
+    // Get Instance of Current User.
+    const user = this;
+
+    // Generate Token for the User.
+    const token = await jwt.sign(
+        { _id: user._id },
+        process.env.SECRET_KEY_JWT,
+        {
+            expiresIn: "7d",
+        }
+    );
+
+    // Return the Token
+    return token;
+};
+
+// To verify the Password
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const passwordHash = this.password;
+
+    const isPasswordValid = await bcrypt.compare(
+        passwordInputByUser,
+        passwordHash
+    );
+
+    return isPasswordValid;
+};
 
 // Creating Model from User Schema
 export const User = mongoose.model("User", userSchema);

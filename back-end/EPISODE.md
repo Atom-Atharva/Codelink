@@ -542,3 +542,65 @@ Created `/signup` and `/login` routes inside application with `brcyption` on pas
 `NOTE:` DO NOT Provide Extra Information in Errors (Information Leaking). For example: Do not throw error message like "User Not Registered in DB" or "Password Incorrect", instead use "Invalid Credentials".
 
 ---
+
+# Episode 10: Authentication, JWT & Cookies
+
+In this Episode:
+
+1. [Authentication Middleware](#authentication-middleware)
+2. [JWT](#jwt)
+3. [Cookies](#cookies)
+4. [Mongoose Schema Methods](#mongoose-schema-methods)
+
+## Authentication Middleware
+
+Authentication middleware is used to `protect routes` from unauthorized access. It verifies the user's identity before allowing access to certain endpoints.
+
+Server will send a `token` to client after successful login, which will be used to authenticate the user for further requests.
+
+## JWT
+
+JWT stands for `JSON Web Token`. It is an open standard that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
+
+It is used to authenticate the user by sending a token to the client after successful login.
+
+Token must have an `expiry` because of security reasons like take a scenario where you are accessing a website from others computer and you forgot to logout, if site jwt don't have an expiry then it will remain logged in on other computer and can be misused.
+
+## Cookies
+
+Cookies are small pieces of data that are stored in the `user's browser`. They are used to store information about the user's session, such as login status, shopping cart items, etc.
+
+In our project, we will be using cookies to store the JWT token for authentication. These cookies has a `expiry` after which the user needs to regenerate JWT Token.
+
+```js
+// To send cookie to user
+res.cookie("Token", "Cookie Data HERE.");
+```
+
+```js
+// To Access ALL the Cookies from Request
+const cookie = req.cookies;
+```
+
+## Mongoose Schema Methods
+
+Some methods are very close to schema like creating a jwt token, thus these methods can be offloaded to schema level methods.
+
+```js
+// Schema Methods
+// Don't use Arrow Methods because "this" keyword works with normal functions and doesn't work with arrow functions.
+userSchema.method.getJWT = async function () {
+    // Get Instance of Current User.
+    const user = this;
+
+    // Generate Token for the User.
+    const token = await jwt.sign({ _id: user._id }, SECRET_KEY_JWT, {
+        expiresIn: "7d",
+    });
+
+    // Return the Token
+    return token;
+};
+```
+
+---
