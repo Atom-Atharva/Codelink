@@ -604,3 +604,84 @@ userSchema.method.getJWT = async function () {
 ```
 
 ---
+
+# Episode 11: Diving Into APIs and Express Router
+
+In this Episode:
+
+1. [APIs for CodeLink](#api-list-low-level-designing-api-designing)
+2. [Express Router](#express-router)
+
+## API List (Low Level Designing) (API Designing)
+
+Lets finalize the API Designing for CodeLink
+
+### Auth APIs
+
+-   POST `/signup`
+-   POST `/login`
+-   POST `/logout`
+
+### Profile APIs
+
+-   GET `/profile/view`
+-   PATCH `/profile/edit`
+-   PATCH `/profile/password` 
+
+### Connection Request APIs
+
+```
+Status:
+    - Ignore
+    - Interested
+    - Accepted
+    - Rejected
+```
+
+-   POST `/request/send/interested/:userId`
+-   POST `/request/send/ignored/:userId`
+-   POST `/request/review/accepted/:requestId`
+-   POST `/request/review/rejected/:requestId`
+
+### User APIs
+
+-   GET `/user/connections` : What connections I am matched with.
+-   GET `/user/requests`
+-   GET `/user/feed` : Get you the
+
+## Express Router
+
+For have a good `readability` over the code, we use routers to have `modularity` inside the code. It is basically a `logical separation` of the code.
+
+We would be using `express router` to achieve the modularity inside the code.
+
+```js
+// In App.js
+// Middlewares for Route Handlers, check line by line for correct request handler.
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+```
+
+```js
+// In Profile.Router.js
+import express from "express";
+import userAuth from "../middlewares/auth.middlerware.js";
+
+const profileRouter = express.Router();
+
+// Profile API - GET /profile - Get User Profile and needs to verify JWT Token before passing to Request Handler.
+profileRouter.get("/profile", userAuth, async (req, res) => {
+    try {
+        // Get user from Request as passed in auth middleware
+        const { user } = req;
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(400).send("Error: " + error.message);
+    }
+});
+
+export default profileRouter;
+```
+
+---
