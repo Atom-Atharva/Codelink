@@ -1,4 +1,6 @@
 import validator from "validator";
+import { User } from "../models/user.model.js";
+import { ConnectionRequest } from "../models/connectionRequest.model.js";
 
 export const validateSignUpData = (req) => {
     const { firstName, lastName, emailId, password } = req.body;
@@ -49,4 +51,46 @@ export const validatePasswordProfileData = (req) => {
     if (!req.body.password || !validator.isStrongPassword(req.body.password)) {
         throw new Error("Required Valid Password.");
     }
+};
+
+export const validateSendRequestData = async (req) => {
+    const fromUserId = req.user._id;
+    const toUserId = req.params.toUserId;
+    const status = req.params.status;
+
+    // Validate Status Code
+    const allowedStatus = ["ignored", "interested"];
+    if (!allowedStatus.includes(status)) {
+        throw new Error("Invalid Status Type: " + status);
+    }
+
+    // Validate To User Id
+    const toUser = await User.findById(toUserId);
+    if (!toUser) {
+        throw new Error("Invalid Receiver.");
+    }
+
+    // If there is an existing ConnectionRequest
+    const existingConnectionRequest = await ConnectionRequest.findOne({
+        $or: [
+            { fromUserId, toUserId },
+            { fromUserId: toUserId, toUserId: fromUserId },
+        ],
+    });
+    if (existingConnectionRequest) {
+        throw new Error("Request Already Exist.");
+    }
+
+    // Validation of fromUser equals toUser is written in pre middleware at Schema Level.
+    // Schema Level Validator (Kind of Middleware)
+    // connectionRequestSchema.pre("save", function (next) {
+    //     const connectionRequest = this;
+
+    //     // Check if from User ID equals to User ID
+    //     if (connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
+    //         throw new Error("Cannot Send Connection Request to Yourself!");
+    //     }
+
+    //     next();
+    // });
 };

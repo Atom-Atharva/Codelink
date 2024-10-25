@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 // Routers
-import requestRouter from "./routes/requests.route.js";
+import requestRouter from "./routes/request.route.js";
 import authRouter from "./routes/auth.route.js";
 import profileRouter from "./routes/profile.route.js";
 

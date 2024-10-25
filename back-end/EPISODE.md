@@ -626,7 +626,7 @@ Lets finalize the API Designing for CodeLink
 
 -   GET `/profile/view`
 -   PATCH `/profile/edit`
--   PATCH `/profile/password` 
+-   PATCH `/profile/password`
 
 ### Connection Request APIs
 
@@ -682,6 +682,49 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
 });
 
 export default profileRouter;
+```
+
+---
+
+# Episode 12: Logical DB Query and Compound Indexes
+
+In this Episode:
+
+1. Created Connection Request DB
+2. [Compound Indexing in DB](#compound-indexing-in-db)
+3. [Logical DB Query](#logical-db-query)
+
+## Compound Indexing in DB
+
+As our project grows, the Database will contain millions of data, to scale things up, we need to optimize our DB using indexing in our DB, so that APIs become faster.
+
+In our project we need to use indexing on emailId field but mongoDB automatically applies indexing on fields with `unique: true`.
+
+Also in our `connectionRequest.model.js`, we need to use indexing on 2 fields together (toUserId, fromUserId) thus creating a `compound index`.
+
+```js
+// Compound Index
+// 1 : Ascending
+// -1 : Descending
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
+```
+
+Read more about index from the [article](https://www.mongodb.com/resources/basics/databases/database-index).
+
+## Logical DB Query
+
+To perform logical operations in the DB Query, we use Logical DB Queries like `$or`, `$and`, `$not`, `$nor`.
+
+Read more about in the [article](https://www.mongodb.com/docs/manual/reference/operator/query-logical/)
+
+```js
+// If there is an existing ConnectionRequest
+const existingConnectionRequest = await ConnectionRequest.findOne({
+    $or: [
+        { fromUserId, toUserId },
+        { fromUserId: toUserId, toUserId: fromUserId },
+    ],
+});
 ```
 
 ---
