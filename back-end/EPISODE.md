@@ -775,3 +775,60 @@ const connectionRequest = await ConnectionRequest.find({
     status: "interested",
 }).populate("fromUserId", ["firstName", "lastName"]);
 ```
+
+---
+
+# Episode 14: Building Feed API and Pagination
+
+In this Episode:
+
+1. Feed API
+2. [Pagination](#pagination)
+
+## Pagination
+
+When API is been throttled to send certain number of response and not all response is called pagination, i.e, it restricted the number of results it needs to send to client.
+
+In Codelink, we can restrict the feed to 10 users at a time, and we need to call API again to get 10 more users.
+
+```
+1. /user/feed?page=1&limit=10 => First 10 user (1-10)
+2. /user/feed?page=2&limit=10 => Second 10 user (11-20)
+3. /user/feed?page=3&limit=10 => Third 10 user (21-30)
+```
+
+In mongoDB we some amazing function `.skip()` & `.limit()`
+
+```
+1. .skip(0) & .limit(10)
+2. .skip(10) & .limit(10)
+3. .skip(20) & .limit(10)
+```
+
+```js
+// Coding Example for Pagination:
+
+// Get Params from URL
+const page = parseInt(req.query.page) || 1; // Convert to INT
+
+// Validate Limit (Upper Bound)
+let limit = parseInt(req.query.limit) || 10;
+limit = limit > 50 ? 50 : limit;
+
+const skip = (page - 1) * limit;
+
+// Get All users not in hideUserFromFeed List
+const users = await User.find({
+    // Convert Set To Array
+    $and: [
+        { _id: { $nin: Array.from(hideUsersFromFeed) } }, // Not in Array
+        { _id: { $ne: loggedInUser._id } }, // Not Equal
+    ],
+})
+    .select(USER_SAFE_DATA)
+    // Pagination Applied
+    .skip(skip)
+    .limit(limit);
+```
+
+---
