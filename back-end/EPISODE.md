@@ -646,7 +646,7 @@ Status:
 ### User APIs
 
 -   GET `/user/connections` : What connections I am matched with.
--   GET `/user/requests`
+-   GET `/user/requests/received`
 -   GET `/user/feed` : Get you the
 
 ## Express Router
@@ -728,3 +728,50 @@ const existingConnectionRequest = await ConnectionRequest.findOne({
 ```
 
 ---
+
+# Episode 13: ref, Populate & Thought Process of writing APIs
+
+In this Episode:
+
+1. [Thought Process : POST vs GET APIs](#thought-process-of-post-vs-get-apis)
+2. [Ref and Populate](#ref-and-populate)
+
+## Thought Process of POST vs GET APIs
+
+1. **POST APIs**
+
+-   In post request, we validate the data because if we don't then the server is vulnerable to hackers as they can find a loop hole in the server and insert their data inside our DB, which is dangerous.
+
+-   That is why, we need to verify each and every thing which is coming inside our DB.
+
+2. **GET APIs**
+
+-   Here, we are sending things to user, thus we must be very sure that we are only sending specific data to authorized user.
+
+## Ref and Populate
+
+When we want to access instance of an Object which is mentioned in `this` Object, we can either make a DB call `findById` and get the other objects data or we can use `ref` and `populate` to get the data.
+
+It is like replacement for `JOINS`.
+
+```js
+// In Connection Request Schema
+        fromUserId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User", // reference to the user collection
+            required: true,
+        },
+        toUserId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+```
+
+```js
+// While Fetching Connection Request
+const connectionRequest = await ConnectionRequest.find({
+    toUserId: loggedInUser._id,
+    status: "interested",
+}).populate("fromUserId", ["firstName", "lastName"]);
+```

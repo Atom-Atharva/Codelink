@@ -1,7 +1,10 @@
 import express from "express";
 import userAuth from "../middlewares/auth.middlerware.js";
 import { ConnectionRequest } from "../models/connectionRequest.model.js";
-import { validateSendRequestData } from "../utils/validation.js";
+import {
+    validateReviewRequestData,
+    validateSendRequestData,
+} from "../utils/validation.js";
 
 const requestRouter = express.Router();
 
@@ -30,6 +33,34 @@ requestRouter.post(
             res.status(200).json({ message: "Connection Request Send.", data });
         } catch (error) {
             res.status(400).send("Error: " + error.message);
+        }
+    }
+);
+
+// Review Connection Request API - POST /request/review/:status/:requestId
+requestRouter.post(
+    "/request/review/:status/:requestId",
+    userAuth,
+    async (req, res) => {
+        try {
+            // Validate Request
+            await validateReviewRequestData(req);
+
+            const { status } = req.params;
+
+            // Get Connection Request as passed from validator
+            const connectionRequest = req.connectionRequest;
+
+            // Update Status
+            connectionRequest.status = status;
+            const data = await connectionRequest.save();
+
+            res.status(200).json({
+                message: "Connection Request " + status,
+                data,
+            });
+        } catch (error) {
+            res.status(400).json({ message: "Error: " + error.message });
         }
     }
 );

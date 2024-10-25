@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import requestRouter from "./routes/request.route.js";
 import authRouter from "./routes/auth.route.js";
 import profileRouter from "./routes/profile.route.js";
+import userRouter from "./routes/user.route.js";
 
 // Initializing dotenv
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 connectDB()
     .then(() => {

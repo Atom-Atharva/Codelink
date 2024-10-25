@@ -94,3 +94,28 @@ export const validateSendRequestData = async (req) => {
     //     next();
     // });
 };
+
+export const validateReviewRequestData = async (req) => {
+    const status = req.params.status;
+    const requestId = req.params.requestId;
+    const loggedInUser = req.user;
+
+    // Status should only be ["accepted", "rejected"]
+    const allowedStatus = ["accepted", "rejected"];
+    if (!allowedStatus.includes(status)) {
+        throw new Error("Invalid Status Type.");
+    }
+
+    // connectionRequest should Exist, loggedInUserId == toUserId, status should be "interested".
+    const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+    });
+    if (!connectionRequest) {
+        throw new Error("Invalid Connection Request.");
+    }
+
+    // Pass Connection Request ahead.
+    req.connectionRequest = connectionRequest;
+};
