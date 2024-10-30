@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { User } from "../models/user.model.js";
 
 const authRouter = express.Router();
+const USER_SAFE_DATA = "firstName lastName emailId photoUrl about skills";
 
 // Signup API - POST /signup - Register User to DB
 authRouter.post("/signup", async (req, res) => {
@@ -41,7 +42,7 @@ authRouter.post("/login", async (req, res) => {
 
         // Find User
         const { emailId, password } = req.body;
-        const user = await User.findOne({ emailId: emailId });
+        const user = await User.findOne({ emailId: emailId }).select();
         if (!user) {
             throw new Error("Invalid Credentials!");
         }
@@ -56,7 +57,10 @@ authRouter.post("/login", async (req, res) => {
             res.cookie("token", token);
 
             // Send Response back to user
-            res.status(200).send("User Logged In Successfully.");
+            res.status(200).json({
+                message: "User Logged In Successfully.",
+                data: user,
+            });
         } else {
             res.status(400).send("Invalid Credentials!");
         }

@@ -8,12 +8,21 @@ import requestRouter from "./routes/request.route.js";
 import authRouter from "./routes/auth.route.js";
 import profileRouter from "./routes/profile.route.js";
 import userRouter from "./routes/user.route.js";
+import cors from "cors";
 
 // Initializing dotenv
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
+// Middleware to avoid CORS and pass cookies
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    })
+);
 
 // Middleware to Parse JSON requests to JS Object
 app.use(express.json());
