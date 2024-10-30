@@ -5,7 +5,7 @@ import Footer from "../components/header-footer/Footer";
 const Body = () => {
     return (
         <div className="flex flex-col min-h-screen justify-between">
-            <div>
+            <div className="flex-grow flex flex-col">
                 <Navbar />
                 <Outlet />
             </div>
