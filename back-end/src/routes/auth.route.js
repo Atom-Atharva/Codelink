@@ -4,7 +4,12 @@ import bcrypt from "bcrypt";
 import { User } from "../models/user.model.js";
 
 const authRouter = express.Router();
-const USER_SAFE_DATA = "firstName lastName emailId photoUrl about skills";
+// Cookies Options
+export const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+};
 
 // Signup API - POST /signup - Register User to DB
 authRouter.post("/signup", async (req, res) => {
@@ -54,7 +59,7 @@ authRouter.post("/login", async (req, res) => {
             const token = await user.getJWT();
 
             // Add the Token to Cookie
-            res.cookie("token", token);
+            res.cookie("token", token, options);
 
             // Send Response back to user
             res.status(200).json({
