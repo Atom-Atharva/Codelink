@@ -19,3 +19,10 @@ In this episode, we would be developing core functionality of the web site.
 3. Updated Backend for CORS Policy
 4. Setting-up Redux Store
 5. Navigate to Feed API
+
+# Episode 17: CodeLink UI Part: 3
+
+In this episode:
+
+1. Logout API
+2. Fetch Data with Cookie.
