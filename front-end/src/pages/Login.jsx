@@ -10,6 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [error, setError] = useState("");
 
     const handleLoginBtn = async () => {
         try {
@@ -29,6 +30,7 @@ const Login = () => {
             // Navigate to Feed Page
             navigate("/");
         } catch (error) {
+            setError(error?.response?.data || "Something went wrong!");
             console.log("Error: ", error);
         }
     };
@@ -36,7 +38,7 @@ const Login = () => {
     return (
         <div className="flex-grow flex">
             <div className="flex justify-center items-center flex-grow">
-                <div className="card h-1/2 bg-base-300 w-96 shadow-xl">
+                <div className="card bg-base-300 w-96 shadow-xl">
                     <div className="card-body">
                         <h2 className="card-title justify-center mb-4">
                             Welcome Back!
@@ -81,6 +83,7 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </label>
+                        <p className="text-red-500 text-sm">{error}</p>
                         <div className="card-actions justify-center mt-4">
                             <button
                                 className="btn btn-block btn-primary text-lg"

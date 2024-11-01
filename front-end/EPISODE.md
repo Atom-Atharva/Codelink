@@ -24,5 +24,7 @@ In this episode, we would be developing core functionality of the web site.
 
 In this episode:
 
-1. Logout API
+1. Logout API.
 2. Fetch Data with Cookie.
+3. Feed API and UI.
+4. Edit Profile API and UI.

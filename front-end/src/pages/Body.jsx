@@ -16,8 +16,6 @@ const Body = () => {
             const res = await axios.get(PROFILE_VIEW_API, {
                 withCredentials: true,
             });
-            console.log(res);
-
             dispatch(addUser(res?.data));
 
             navigate("/");

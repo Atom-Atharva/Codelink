@@ -6,3 +6,9 @@ export const PROFILE_VIEW_API =
 
 export const LOGOUT_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_LOGOUT_ROUTE;
+
+export const FEED_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_FEED_ROUTE;
+
+export const PROFILE_EDIT_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_PROFILE_EDIT_ROUTE;

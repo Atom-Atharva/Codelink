@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { LOGOUT_API } from "../../utils/constants/apiList";
 import { removeUser } from "../../utils/redux/userSlice";
+import { removeFeed } from "../../utils/redux/feedSlice";
 
 const Navbar = () => {
     const user = useSelector((store) => store.user);
@@ -22,6 +23,7 @@ const Navbar = () => {
             console.log(res);
 
             dispatch(removeUser());
+            dispatch(removeFeed());
 
             navigate("/login");
         } catch (error) {
@@ -56,11 +58,10 @@ const Navbar = () => {
                             <li>
                                 <Link to="/profile" className="justify-between">
                                     Profile
-                                    <span className="badge">New</span>
                                 </Link>
                             </li>
                             <li>
-                                <a>Settings</a>
+                                <a>Change Password</a>
                             </li>
                             <li>
                                 <a onClick={handleLogoutBtn}>Logout</a>
