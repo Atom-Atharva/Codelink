@@ -31,6 +31,7 @@ In this episode:
 
 # Episode 18: CodeLink UI Part: 4
 
-In this episode: 
+In this episode:
 
 1. My Connections Page
+2. My Connection Request Page

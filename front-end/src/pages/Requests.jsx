@@ -1,42 +1,42 @@
 import axios from "axios";
-import { GET_MY_CONNECTIONS_API } from "../utils/constants/apiList";
 import { useEffect, useState } from "react";
+import { GET_MY_REQUESTS_API } from "../utils/constants/apiList";
 import Card from "../components/connections/Card";
 
-const Connections = () => {
-    const [connections, setConnections] = useState([]);
+const Request = () => {
+    const [requests, setRequests] = useState([]);
 
-    const fetchConnections = async () => {
+    const fetchRequests = async () => {
         try {
-            const res = await axios.get(GET_MY_CONNECTIONS_API, {
+            const res = await axios.get(GET_MY_REQUESTS_API, {
                 withCredentials: true,
             });
 
-            setConnections(res?.data?.data);
+            setRequests(res?.data?.data);
         } catch (error) {
             console.log(error);
         }
     };
 
     useEffect(() => {
-        fetchConnections();
+        fetchRequests();
     }, []);
 
     return (
         <div className="flex flex-col items-center my-10">
-            <h1 className="text-3xl font-bold">Connections</h1>
+            <h1 className="text-3xl font-bold">Pending Requests</h1>
 
             <div className="my-10 w-full">
-                {connections.length === 0 ? (
-                    <p className="text-center">No Current Connections</p>
+                {requests.length === 0 ? (
+                    <p className="text-center">No Pending Requests</p>
                 ) : (
-                    connections.map((connection) => {
+                    requests.map((request) => {
                         return (
                             <div
-                                key={connection._id}
+                                key={request._id}
                                 className="mb-10 flex flex-col items-center"
                             >
-                                <Card data={connection} />
+                                <Card data={request.fromUserId} request={true} />
                             </div>
                         );
                     })
@@ -46,4 +46,4 @@ const Connections = () => {
     );
 };
 
-export default Connections;
+export default Request;

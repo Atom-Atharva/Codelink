@@ -15,3 +15,6 @@ export const PROFILE_EDIT_API =
 
 export const GET_MY_CONNECTIONS_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_MY_CONNECTIONS_ROUTE;
+
+export const GET_MY_REQUESTS_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_MY_REQUEST_ROUTE;

@@ -64,6 +64,9 @@ const Navbar = () => {
                                 <a>Change Password</a>
                             </li>
                             <li>
+                                <Link to="/requests">Pending Requests</Link>
+                            </li>
+                            <li>
                                 <Link to="/connections">My Connections</Link>
                             </li>
                             <li>
