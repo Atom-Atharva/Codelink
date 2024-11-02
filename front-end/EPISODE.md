@@ -28,3 +28,9 @@ In this episode:
 2. Fetch Data with Cookie.
 3. Feed API and UI.
 4. Edit Profile API and UI.
+
+# Episode 18: CodeLink UI Part: 4
+
+In this episode: 
+
+1. My Connections Page
