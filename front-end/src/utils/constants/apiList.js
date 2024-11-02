@@ -18,3 +18,6 @@ export const GET_MY_CONNECTIONS_API =
 
 export const GET_MY_REQUESTS_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_MY_REQUEST_ROUTE;
+
+export const REVIEW_REQUEST_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_REVIEW_REQUEST_ROUTE;

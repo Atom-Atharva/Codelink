@@ -5,6 +5,10 @@ import Card from "../components/connections/Card";
 
 const Request = () => {
     const [requests, setRequests] = useState([]);
+    const removeRequest = (requestID) => {
+        const filterRequest = requests.filter((req) => req._id !== requestID);
+        setRequests(filterRequest);
+    };
 
     const fetchRequests = async () => {
         try {
@@ -36,7 +40,11 @@ const Request = () => {
                                 key={request._id}
                                 className="mb-10 flex flex-col items-center"
                             >
-                                <Card data={request.fromUserId} request={true} />
+                                <Card
+                                    data={request.fromUserId}
+                                    requestId={request._id}
+                                    removeRequest={removeRequest}
+                                />
                             </div>
                         );
                     })
