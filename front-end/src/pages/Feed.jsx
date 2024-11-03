@@ -24,11 +24,16 @@ const Feed = () => {
     }, []);
 
     return (
-        feed && (
+        feed &&
+        (feed.length == 0 ? (
+            <h1 className="text-center my-10 text-xl font-semibold">
+                No New Users Found!
+            </h1>
+        ) : (
             <div className="flex flex-grow justify-center items-center">
-                <Card user={feed[4]} />
+                <Card user={feed[0]} />
             </div>
-        )
+        ))
     );
 };
 

@@ -10,8 +10,6 @@ const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleSignUpBtn = async () => {};
-
     const handleLogoutBtn = async () => {
         try {
             // Handle Logout API.
@@ -38,7 +36,7 @@ const Navbar = () => {
                     CodeLink
                 </Link>
             </div>
-            {user ? (
+            {user && (
                 <div className="flex-none gap-4 mx-4">
                     <p className="font-semibold">Welcome, {user.firstName}</p>
                     <div className="dropdown dropdown-end">
@@ -74,13 +72,6 @@ const Navbar = () => {
                             </li>
                         </ul>
                     </div>
-                </div>
-            ) : (
-                <div
-                    className="mx-4 font-semibold hover:font-bold cursor-pointer hover:underline hover:underline-offset-2"
-                    onClick={handleSignUpBtn}
-                >
-                    SignUp
                 </div>
             )}
         </div>

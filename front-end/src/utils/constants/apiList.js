@@ -1,6 +1,9 @@
 export const LOGIN_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_LOGIN_ROUTE;
 
+export const SIGNUP_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_SIGNUP_ROUTE;
+
 export const PROFILE_VIEW_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_PROFILE_VIEW_ROUTE;
 
@@ -21,3 +24,6 @@ export const GET_MY_REQUESTS_API =
 
 export const REVIEW_REQUEST_API =
     import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_REVIEW_REQUEST_ROUTE;
+
+export const SEND_REQUEST_API =
+    import.meta.env.VITE_BASE_ROUTE + import.meta.env.VITE_SEND_REQUEST_ROUTE;

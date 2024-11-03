@@ -127,6 +127,7 @@ const EditProfile = ({ user }) => {
                     photoUrl,
                     skills,
                 }}
+                profile={true}
             />
         </div>
     );

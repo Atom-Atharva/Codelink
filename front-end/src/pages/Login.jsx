@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { LOGIN_API } from "../utils/constants/apiList";
+import { LOGIN_API, SIGNUP_API } from "../utils/constants/apiList";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/redux/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +8,11 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
     const [emailId, setEmailId] = useState("");
     const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isLoginForm, setIsLoginForm] = useState(true);
     const [error, setError] = useState("");
 
     const handleLoginBtn = async () => {
@@ -35,15 +38,80 @@ const Login = () => {
         }
     };
 
+    const handleSignUpBtn = async () => {
+        try {
+            const res = await axios.post(
+                SIGNUP_API,
+                {
+                    firstName,
+                    lastName,
+                    emailId,
+                    password,
+                },
+                { withCredentials: true }
+            );
+            dispatch(addUser(res?.data?.data));
+
+            navigate("/profile");
+        } catch (error) {
+            setError(error?.response?.data || "Something went wrong!");
+            console.log(error);
+        }
+    };
+
     return (
         <div className="flex-grow flex">
             <div className="flex justify-center items-center flex-grow">
                 <div className="card bg-base-300 w-96 shadow-xl">
                     <div className="card-body">
                         <h2 className="card-title justify-center mb-4">
-                            Welcome Back!
+                            {isLoginForm
+                                ? "Welcome Back!"
+                                : "Welcome to CodeLink!"}
                         </h2>
 
+                        {!isLoginForm && (
+                            <>
+                                <label className="input input-bordered flex items-center gap-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 16 16"
+                                        fill="currentColor"
+                                        className="h-4 w-4 opacity-70"
+                                    >
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        className="grow"
+                                        value={firstName}
+                                        placeholder="First Name"
+                                        onChange={(e) =>
+                                            setFirstName(e.target.value)
+                                        }
+                                    />
+                                </label>
+                                <label className="input input-bordered flex items-center gap-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 16 16"
+                                        fill="currentColor"
+                                        className="h-4 w-4 opacity-70"
+                                    >
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        className="grow"
+                                        value={lastName}
+                                        placeholder="Last Name"
+                                        onChange={(e) =>
+                                            setLastName(e.target.value)
+                                        }
+                                    />
+                                </label>
+                            </>
+                        )}
                         <label className="input input-bordered flex items-center gap-2">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -87,11 +155,36 @@ const Login = () => {
                         <div className="card-actions justify-center mt-4">
                             <button
                                 className="btn btn-block btn-primary text-lg"
-                                onClick={handleLoginBtn}
+                                onClick={
+                                    isLoginForm
+                                        ? handleLoginBtn
+                                        : handleSignUpBtn
+                                }
                             >
-                                Login
+                                {isLoginForm ? "Login" : "SignUp"}
                             </button>
                         </div>
+                        {isLoginForm ? (
+                            <p className="text-sm">
+                                New to CodeLink?{" "}
+                                <span
+                                    className="italic underline cursor-pointer hover:font-semibold text-info"
+                                    onClick={() => setIsLoginForm(false)}
+                                >
+                                    SignUp.
+                                </span>
+                            </p>
+                        ) : (
+                            <p className="text-sm">
+                                Already on CodeLink?{" "}
+                                <span
+                                    className="italic underline cursor-pointer hover:font-semibold text-info"
+                                    onClick={() => setIsLoginForm(true)}
+                                >
+                                    Login.
+                                </span>
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

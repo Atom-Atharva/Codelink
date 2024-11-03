@@ -30,10 +30,19 @@ authRouter.post("/signup", async (req, res) => {
         });
 
         // Save User Instance to Database
-        await user.save();
+        const savedUser = await user.save();
+
+        // return JWT Token with Cookie
+        const token = await user.getJWT();
+
+        // Add the Token to Cookie
+        res.cookie("token", token, options);
 
         // Send Response back to client.
-        res.status(200).send("User Added Successfully!");
+        res.status(200).json({
+            message: "User Registered Successfully.",
+            data: savedUser,
+        });
     } catch (err) {
         res.status(400).send("Error saving the user:" + err);
     }
