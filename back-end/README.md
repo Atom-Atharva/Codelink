@@ -1,7 +1,3 @@
-Here’s the README file for the backend, including the API details you provided:
-
----
-
 # CodeLink Backend
 
 Backend server for CodeLink, a platform for users to connect and manage their professional network.
@@ -128,8 +124,6 @@ If you want to contribute to CodeLink Backend, feel free to open a pull request.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT [License](LICENSE).
 
 ---
-
-Let me know if there’s anything more specific you’d like to add!
