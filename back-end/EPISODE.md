@@ -647,7 +647,7 @@ Status:
 
 -   GET `/user/connections` : What connections I am matched with.
 -   GET `/user/requests/received`
--   GET `/user/feed` : Get you the
+-   GET `/user/feed` : Get you the Users on the Platform to Connect
 
 ## Express Router
 
