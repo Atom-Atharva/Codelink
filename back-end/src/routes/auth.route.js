@@ -9,6 +9,7 @@ export const options = {
     httpOnly: true,
     secure: true,
     sameSite: "None",
+    partitioned: true,
 };
 
 // Signup API - POST /signup - Register User to DB
