@@ -5,12 +5,12 @@ import { User } from "../models/user.model.js";
 
 const authRouter = express.Router();
 // Cookies Options
-export const options = {
+export const options = (req) => ({
     httpOnly: true,
     secure: req.secure || req.headers["x-forwarded-proto"] === "https",
     sameSite: "None",
     partitioned: true,
-};
+});
 
 // Signup API - POST /signup - Register User to DB
 authRouter.post("/signup", async (req, res) => {
@@ -37,7 +37,7 @@ authRouter.post("/signup", async (req, res) => {
         const token = await user.getJWT();
 
         // Add the Token to Cookie
-        res.cookie("token", token, options);
+        res.cookie("token", token, options(req));
 
         // Send Response back to client.
         res.status(200).json({
@@ -69,7 +69,7 @@ authRouter.post("/login", async (req, res) => {
             const token = await user.getJWT();
 
             // Add the Token to Cookie
-            res.cookie("token", token, options);
+            res.cookie("token", token, options(req));
 
             // Send Response back to user
             res.status(200).json({
