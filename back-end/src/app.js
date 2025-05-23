@@ -31,7 +31,11 @@ const PORT = process.env.PORT;
 // );
 app.use(
     cors({
-        origin: ["https://codelink-tau.vercel.app", "http://localhost:5173"],
+        origin: [
+            "https://codelink-tau.vercel.app",
+            "http://localhost:5173",
+            "http://13.60.45.175",
+        ],
         credentials: true,
     })
 );
