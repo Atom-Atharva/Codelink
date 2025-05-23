@@ -7,9 +7,11 @@ const authRouter = express.Router();
 // Cookies Options
 export const options = {
     httpOnly: true,
-    secure: true,
-    sameSite: "None",
-    partitioned: true,
+    // FOR DEV ENVIRONMENT
+    // secure: true,
+    // sameSite: "None",
+    // partitioned: true,
+    expires: new Date(Date.now() + 8 * 3600000),
 };
 
 // Signup API - POST /signup - Register User to DB

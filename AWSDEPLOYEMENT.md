@@ -106,3 +106,29 @@ Allowing it to be accessible globally. This guide will walk you through the step
 
     - Restart your nginx : `sudo systemctl restart nginx`
     - Modify the BASEURL in frontend project(constants.js) to `/api` (RELATIVE PATH --> SAME LIKE http://localhost/api)    
+
+## Adding Custom Domain Name
+
+- Purchase domain name on GoDaddy(Domain Registrar).
+- Signup on CloudFlare and ADD a new domain name.
+- Change nameserver on godaddy and point it to cloudflare.
+- Wait for sometime till nameserver are updated.
+- Manage DNS from Cloudflare
+- DNS record: A domain.name IP
+- Enable SSL for website (FULL or FLEXIBLE)
+
+## NOTE
+
+Secure Cookies is been turned off, as I am not purchasing any domain for now. So, I am not able to access the cookies as the request is been secure but not having https.
+
+```js
+// Cookies Options
+export const options = {
+    httpOnly: true,
+    // FOR DEV ENVIRONMENT
+    // secure: true,
+    // sameSite: "None",
+    // partitioned: true,
+    expires: new Date(Date.now() + 8 * 3600000),
+};
+```
