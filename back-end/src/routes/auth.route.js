@@ -7,7 +7,7 @@ const authRouter = express.Router();
 // Cookies Options
 export const options = {
     httpOnly: true,
-    secure: true,
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
     sameSite: "None",
     partitioned: true,
 };
